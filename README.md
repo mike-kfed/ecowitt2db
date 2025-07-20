@@ -2,6 +2,47 @@
 
 Emulates an ecowitt server endpoint. Converts the values to metric and stores the weather data into InfluxDB.
 
+## Install
+
+Build it on a compatible machine, and copy it over:
+
+```bash
+cargo build --release
+scp target/release/ecowitt2db target-server:
+```
+
+Modify `ecowitt2db.toml.example` to your InfluxDB credentials and copy it to the target-server as `ecowitt2db.toml`.
+
+### run on boot for systemd
+
+create `/etc/systemd/system/ecowitt2db.service`
+
+```
+[Unit]
+Description=ecowitt2db Service
+After=grafana-server.service
+
+[Service]
+User=weather
+Group=weather
+Type=simple
+WorkingDirectory=/home/weather
+ExecStart=/home/weather/ecowitt2db
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Enable the service and start it
+
+```bash
+systemctl enable ecowitt2db
+systemctl start ecowitt2db
+# see logs
+journalctl -f -u ecowitt2db
+```
+
 ## Dealing with InfluxDB historical data
 
 **TODO**
