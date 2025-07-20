@@ -1,0 +1,7 @@
+listen_port = 9876
+
+[influxdb]
+host = "http://"
+org = "my org"
+token = ""
+bucket = "weather"
